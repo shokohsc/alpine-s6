@@ -29,10 +29,10 @@ RUN \
  /tmp/s6-overlay.tar.gz -L \
 	"https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz" && \
     tar xzf /tmp/s6-overlay.tar.gz -C / && \
- echo "**** create gamestream user and make our folders ****" && \
+ echo "**** create www-data user and make our folders ****" && \
  groupmod -g 1000 users && \
- useradd -u 911 -U -d /config -s /bin/false gamestream && \
- usermod -G users gamestream && \
+ useradd -u 911 -U -d /config -s /bin/false www-data && \
+ usermod -G users www-data && \
  mkdir -p \
 	/app \
 	/config \

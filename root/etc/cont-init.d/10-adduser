@@ -3,29 +3,18 @@
 PUID=${PUID:-911}
 PGID=${PGID:-911}
 
-groupmod -o -g "$PGID" gamestream
-usermod -o -u "$PUID" gamestream
+groupmod -o -g "$PGID" www-data
+usermod -o -u "$PUID" www-data
 
 echo '
-----------------------------------------------------------------------------
-  _____          __  __ ______  _____ _______ _____  ______          __  __
- / ____|   /\   |  \/  |  ____|/ ____|__   __|  __ \|  ____|   /\   |  \/  |
-| |  __   /  \  | \  / | |__  | (___    | |  | |__) | |__     /  \  | \  / |
-| | |_ | / /\ \ | |\/| |  __|  \___ \   | |  |  _  /|  __|   / /\ \ | |\/| |
-| |__| |/ ____ \| |  | | |____ ____) |  | |  | | \ \| |____ / ____ \| |  | |
- \_____/_/    \_\_|  |_|______|_____/   |_|  |_|  \_\______/_/    \_\_|  |_|
-
-
-
-Brought to you by gamestream.biz
 ----------------------------------------------------------------------------
 GID/UID
 ----------------------------------------------------------------------------'
 echo "
-User uid:    $(id -u gamestream)
-User gid:    $(id -g gamestream)
+User uid:    $(id -u www-data)
+User gid:    $(id -g www-data)
 ----------------------------------------------------------------------------
 "
-chown gamestream:gamestream /app
-chown gamestream:gamestream /config
-chown gamestream:gamestream /defaults
+chown www-data:www-data /app
+chown www-data:www-data /config
+chown www-data:www-data /defaults
