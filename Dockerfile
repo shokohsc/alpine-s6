@@ -29,10 +29,10 @@ RUN \
  /tmp/s6-overlay.tar.gz -L \
 	"https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz" && \
     tar xzf /tmp/s6-overlay.tar.gz -C / && \
- echo "**** create www-data user and make our folders ****" && \
+ echo "**** create app user and make our folders ****" && \
  groupmod -g 1000 users && \
- useradd -u 911 -U -d /config -s /bin/false www-data && \
- usermod -G users www-data && \
+ useradd -u 911 -U -d /config -s /bin/false app && \
+ usermod -G users app && \
  mkdir -p \
 	/app \
 	/config \
