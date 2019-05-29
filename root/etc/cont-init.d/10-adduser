@@ -15,6 +15,6 @@ User uid:    $(id -u app)
 User gid:    $(id -g app)
 ----------------------------------------------------------------------------
 "
-chown app:app /app
+chown app:app /var/www
 chown app:app /config
 chown app:app /defaults

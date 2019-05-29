@@ -34,7 +34,7 @@ RUN \
  useradd -u 911 -U -d /config -s /bin/false app && \
  usermod -G users app && \
  mkdir -p \
-	/app \
+	/var/www \
 	/config \
 	/defaults && \
  echo "**** cleanup ****" && \
