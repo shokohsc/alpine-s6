@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine
 
 # set version for s6 overlay
 ARG OVERLAY_VERSION="v1.21.7.0"
@@ -11,8 +11,9 @@ TERM="xterm"
 
 RUN \
  echo "**** install build packages ****" && \
+  apk update && \
   apk add --no-cache --virtual=build-dependencies \
-	tar && \
+  tar && \
  echo "**** install runtime packages ****" && \
  apk add --no-cache \
 	bash \
