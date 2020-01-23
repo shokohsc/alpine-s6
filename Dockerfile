@@ -1,4 +1,5 @@
-FROM alpine
+ARG FROM_TAG='latest'
+FROM alpine:${FROM_TAG:-latest}
 
 # set version for s6 overlay
 ARG OVERLAY_VERSION="v1.21.7.0"
@@ -24,7 +25,7 @@ RUN \
 	shadow \
 	tzdata && \
  echo "**** create bash aliases ****" && \
- echo "alias ll='ls -laG --color=auto'" > /root/.bashrc && \
+ echo "alias ll='ls -laGH --color=auto'" > /root/.bashrc && \
  echo "**** add s6 overlay ****" && \
  curl -o \
  /tmp/s6-overlay.tar.gz -L \
