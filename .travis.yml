@@ -1,16 +1,37 @@
-dist: trusty
+language: shell
 
-jobs:
-  include:
-    - stage: build docker image
-      before_install:
-      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-      - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-      - sudo apt-get update
-      - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-      script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t alpine-s6 .
-      - docker images
-      - docker tag alpine-s6 $DOCKER_USERNAME/alpine-s6
-      - docker push $DOCKER_USERNAME/alpine-s6
+os:
+  - linux
+  - windows
+  - osx
+
+arch:
+  - amd64
+  - arm64
+
+services:
+  - docker
+
+env:
+  global:
+    - IMAGE_NAME="$DOCKER_USERNAME/alpine-s6"
+
+before_script:
+  - docker pull "$IMAGE_NAME" || true
+
+script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
+
+after_script:
+  - docker images
+
+before_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
+
+deploy:
+  provider: script
+  script: docker push "$IMAGE_NAME"
+  on:
+    branch: master
