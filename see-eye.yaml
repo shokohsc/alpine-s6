@@ -13,4 +13,5 @@ build-args:
         - key: OVERLAY_ARCH
           values:
             - amd64
+            - armhf
           tag_key: s6-overlay-arch
