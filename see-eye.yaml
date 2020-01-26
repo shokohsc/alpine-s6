@@ -3,15 +3,14 @@ build-args:
         key: FROM_TAG
         author: library
         image: alpine
-        offset: 0
-        limit: 5
+        limit: 12
     releases:
         - key: OVERLAY_VERSION
           author: just-containers
           repository: s6-overlay
-          offset: 0
-          limit: 5
+          limit: 2
     fixed:
         - key: OVERLAY_ARCH
-          value: amd64
+          values:
+            - amd64
           tag_key: s6-overlay-arch
