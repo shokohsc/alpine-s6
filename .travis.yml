@@ -11,7 +11,7 @@ env:
   global:
     - DOCKER_CLI_EXPERIMENTAL=enabled
     - IMAGE_NAME="$DOCKER_USERNAME/alpine-s6"
-    - TARGET_CPU_ARCH=$(test 'arm64' = "$TRAVIS_CPU_ARCH" && echo "$TRAVIS_CPU_ARCH" || echo 'arm64/v8')
+    - ALPINE_CPU_ARCH=$(test 'arm64' = "$TRAVIS_CPU_ARCH" && echo "$TRAVIS_CPU_ARCH" || echo 'arm64/v8')
 
 before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -24,7 +24,7 @@ before_script:
 
 script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker buildx build --platform="linux/$TRAVIS_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
+  - docker buildx build --platform="linux/$ALPINE_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
 
 after_script:
   - docker images
