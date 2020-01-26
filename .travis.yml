@@ -11,6 +11,7 @@ env:
   global:
     - DOCKER_CLI_EXPERIMENTAL=enabled
     - IMAGE_NAME="$DOCKER_USERNAME/alpine-s6"
+    - TARGET_CPU_ARCH=$(test 'arm64' = "$TRAVIS_CPU_ARCH" && echo "$TRAVIS_CPU_ARCH" || echo 'arm64/v8')
 
 before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
