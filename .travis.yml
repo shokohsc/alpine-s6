@@ -27,21 +27,24 @@ before_script:
   - docker buildx create --name my-builder
   - docker buildx use my-builder
   - docker buildx inspect --bootstrap
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   # - docker buildx build --platform="linux/$ALPINE_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
   - docker buildx build --platform="linux/$TRAVIS_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" --push .
+  on:
+    branch: master
 
 after_script:
   - docker images
   - docker buildx imagetools inspect "$IMAGE_NAME:latest"
 
-before_deploy:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+# before_deploy:
+#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-deploy:
-  provider: script
-  script: docker push "$IMAGE_NAME"
-  on:
-    branch: master
+# deploy:
+#   provider: script
+#   script: docker push "$IMAGE_NAME"
+#   on:
+#     branch: master
