@@ -28,8 +28,7 @@ before_install:
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 
 before_script:
-  - docker run --rm --privileged multiarch/qemu-user-static:register
-  - docker run -it --rm multiarch/debian-debootstrap:arm64-stretch
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   # - echo "$ALPINE_CPU_ARCH"
   - docker pull "$IMAGE_NAME" || true
   - docker buildx create --name my-builder
