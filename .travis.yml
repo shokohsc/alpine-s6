@@ -1,5 +1,7 @@
 language: shell
 
+dist: bionic
+
 os:
   - linux
 
@@ -29,7 +31,7 @@ before_script:
 script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   # - docker buildx build --platform="linux/$ALPINE_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
-  - docker buildx build --platform="linux/$TRAVIS_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
+  - docker buildx build --platform="linux/$TRAVIS_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" --push .
 
 after_script:
   - docker images
