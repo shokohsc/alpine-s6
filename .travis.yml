@@ -4,19 +4,21 @@ branches:
 
 language: shell
 
-dist: xenial
+dist: bionic
 
 os:
   - linux
 
 arch:
   - amd64
-  - arm64
+  # - arm64
 
 env:
   global:
     - DOCKER_CLI_EXPERIMENTAL=enabled
     - IMAGE_NAME="$DOCKER_USERNAME/alpine-s6"
+    # - ARM_ARCHS="linux/arm64,linux/arm/v7,linux/arm/v6"
+    # - X86_ARCHS="linux/amd64,linux/386"
     # - ALPINE_CPU_ARCH=$(test 'arm64' = "$TRAVIS_CPU_ARCH" && echo 'arm64/v8' || echo "$TRAVIS_CPU_ARCH")
 
 before_install:
@@ -26,6 +28,8 @@ before_install:
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 
 before_script:
+  - docker run --rm --privileged multiarch/qemu-user-static:register
+  - docker run -it --rm multiarch/debian-debootstrap:arm64-stretch
   # - echo "$ALPINE_CPU_ARCH"
   - docker pull "$IMAGE_NAME" || true
   - docker buildx create --name my-builder
@@ -36,7 +40,7 @@ before_script:
 script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   # - docker buildx build --platform="linux/$ALPINE_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
-  - docker buildx build --platform="linux/$TRAVIS_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" --push .
+  # - docker buildx build --platform="linux/$TRAVIS_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" --push .
 
 after_script:
   - docker images
