@@ -35,6 +35,7 @@ script:
 
 after_script:
   - docker images
+  - docker buildx imagetools inspect "$IMAGE_NAME:latest"
 
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
