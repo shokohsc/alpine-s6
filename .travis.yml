@@ -1,55 +1,42 @@
-branches:
-  only:
-    - master
-
 language: shell
-
 dist: bionic
-
 os:
   - linux
-
 arch:
   - amd64
   # - arm64
-
 env:
   global:
     - DOCKER_CLI_EXPERIMENTAL=enabled
     - IMAGE_NAME="$DOCKER_USERNAME/alpine-s6"
     # - ARM_ARCHS="linux/arm64,linux/arm/v7,linux/arm/v6"
     # - X86_ARCHS="linux/amd64,linux/386"
-    # - ALPINE_CPU_ARCH=$(test 'arm64' = "$TRAVIS_CPU_ARCH" && echo 'arm64/v8' || echo "$TRAVIS_CPU_ARCH")
+    # - PLATFORMS=$(test 'amd64' = "$TRAVIS_CPU_ARCH" && echo "$X86_ARCHS" || echo "$ARM_ARCHS")
+    - PLATFORMS="linux/arm,linux/arm64,linux/amd64"
 
 before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo add-apt-repository "deb [arch=$TRAVIS_CPU_ARCH] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  # - sudo add-apt-repository "deb [arch=$TRAVIS_CPU_ARCH] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 
 before_script:
-  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-  # - echo "$ALPINE_CPU_ARCH"
+  - echo "$PLATFORMS"
+  - docker buildx version
+  - docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
   - docker pull "$IMAGE_NAME" || true
-  - docker buildx create --name my-builder
-  - docker buildx use my-builder
-  - docker buildx inspect --bootstrap
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker buildx create --name --use mybuilder
+  - docker buildx ls
 
 script:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  # - docker buildx build --platform="linux/$ALPINE_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
-  # - docker buildx build --platform="linux/$TRAVIS_CPU_ARCH" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" --push .
+  # - docker buildx build --platform="$PLATFORMS" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME:latest-$TRAVIS_CPU_ARCH" --push .
+  - docker buildx build --platform="$PLATFORMS" --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME:latest" --push .
 
 after_script:
   - docker images
   - docker buildx imagetools inspect "$IMAGE_NAME:latest"
 
-# before_deploy:
-#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
-# deploy:
-#   provider: script
-#   script: docker push "$IMAGE_NAME"
-#   on:
-#     branch: master
+branches:
+  only:
+    - master
