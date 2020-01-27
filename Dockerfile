@@ -33,7 +33,7 @@ RUN \
     /tmp/s6-overlay.tar.gz -L \
     "https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz" && \
   echo "**** verify s6-overlay release download ****" && \
-  gpg --verify /tmp/s6-overlay.tar.gz.sig /tmp/s6-overlay.tar.gz && \
+  gpg --verify "s6-overlay-${OVERLAY_ARCH}.tar.gz.sig" /tmp/s6-overlay.tar.gz && \
   tar xzf /tmp/s6-overlay.tar.gz -C / && \
   echo "**** create app user and make our folders ****" && \
   groupmod -g 1000 users && \
