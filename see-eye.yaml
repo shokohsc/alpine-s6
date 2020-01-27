@@ -12,6 +12,5 @@ build-args:
     fixed:
         - key: OVERLAY_ARCH
           values:
-            - amd64
-            - armhf
+            - nobin
           tag_key: s6-overlay-arch
