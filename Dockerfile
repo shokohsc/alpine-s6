@@ -14,10 +14,9 @@ RUN \
   echo "**** install build packages ****" && \
   apk update && \
   apk add --no-cache --virtual=build-dependencies \
-    tar && \
-  echo "**** install runtime packages ****" && \
-  apk add --no-cache \
+    tar \
     openssl \
+    gnupg \
     bash \
     curl \
     vim \
@@ -29,12 +28,12 @@ RUN \
   echo "alias ll='ls -laGH --color=auto'" > /root/.bashrc && \
   echo "**** add s6 overlay ****" && \
   curl https://keybase.io/justcontainers/key.asc | gpg --import && \
-  curl -o \
-    /tmp/s6-overlay.tar.gz -L \
-    "https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz" && \
+  cd /tmp && \
+  { curl -L --remote-name-all \
+    "https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz{,.sig}" ; ls -lah ; cd -; } && \
   echo "**** verify s6-overlay release download ****" && \
-  gpg --verify "s6-overlay-${OVERLAY_ARCH}.tar.gz.sig" /tmp/s6-overlay.tar.gz && \
-  tar xzf /tmp/s6-overlay.tar.gz -C / && \
+  gpg --verify "/tmp/s6-overlay-${OVERLAY_ARCH}.tar.gz.sig" "/tmp/s6-overlay-${OVERLAY_ARCH}.tar.gz" && \
+  tar xzf "/tmp/s6-overlay-${OVERLAY_ARCH}.tar.gz" -C / && \
   echo "**** create app user and make our folders ****" && \
   groupmod -g 1000 users && \
   useradd -u 911 -U -d /config -s /bin/false app && \
