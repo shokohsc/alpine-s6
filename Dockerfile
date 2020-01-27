@@ -20,7 +20,6 @@ RUN \
     bash \
     curl \
     vim \
-    ca-certificates \
     coreutils \
     shadow \
     tzdata && \
@@ -30,23 +29,20 @@ RUN \
   curl https://keybase.io/justcontainers/key.asc | gpg --import && \
   cd /tmp && \
   { curl -L --remote-name-all \
-    "https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz{,.sig}" ; ls -lah ; cd -; } && \
+    "https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${OVERLAY_ARCH}.tar.gz{,.sig}" ; cd -; } && \
   echo "**** verify s6-overlay release download ****" && \
   gpg --verify "/tmp/s6-overlay-${OVERLAY_ARCH}.tar.gz.sig" "/tmp/s6-overlay-${OVERLAY_ARCH}.tar.gz" && \
-  tar xzf "/tmp/s6-overlay-${OVERLAY_ARCH}.tar.gz" -C / && \
+  tar -xzf "/tmp/s6-overlay-${OVERLAY_ARCH}.tar.gz" -C / && \
   echo "**** create app user and make our folders ****" && \
   groupmod -g 1000 users && \
   useradd -u 911 -U -d /config -s /bin/false app && \
   usermod -G users app && \
   mkdir -p \
-    /var/www \
     /config \
     /defaults && \
   echo "**** cleanup ****" && \
-  apk del --purge \
-    build-dependencies && \
-  rm -rf \
-    /tmp/*
+  apk del --purge && \
+  rm -rf /tmp/*
 
 # add local files
 COPY root/ /
