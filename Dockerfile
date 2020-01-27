@@ -13,7 +13,7 @@ TERM="xterm"
 RUN \
   echo "**** install build packages ****" && \
   apk update && \
-  apk add --no-cache --virtual=build-dependencies \
+  apk add --no-cache \
     tar \
     openssl \
     gnupg \
