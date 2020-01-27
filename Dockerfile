@@ -2,8 +2,8 @@ ARG FROM_TAG='latest'
 FROM alpine:${FROM_TAG:-latest}
 
 # set version for s6 overlay
-ARG OVERLAY_VERSION="v1.21.7.0"
-ARG OVERLAY_ARCH=${BUILDARCH:-nobin}
+ARG OVERLAY_VERSION="v1.22.1.0"
+ARG OVERLAY_ARCH=${BUILDARCH:-amd64}
 
 # environment variables
 ENV PS1="$(whoami)@$(hostname):$(pwd)$ " \
